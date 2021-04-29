@@ -17,17 +17,6 @@ const pool = new Pool({
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithEmail = function(email) {
-  // let user;
-  // for (const userId in users) {
-  //   user = users[userId];
-  //   if (user.email.toLowerCase() === email.toLowerCase()) {
-  //     break;
-  //   } else {
-  //     user = null;
-  //   }
-  // }
-  // return Promise.resolve(user);
-
   return pool
   .query(`SELECT * FROM users WHERE email = $1;`, [email])
   .then((result) => {
@@ -45,7 +34,6 @@ exports.getUserWithEmail = getUserWithEmail;
  * @return {Promise<{}>} A promise to the user.
  */
 const getUserWithId = function(id) {
-  // return Promise.resolve(users[id]);
   return pool
   .query(`SELECT * FROM users WHERE id = $1;`, [id])
   .then((result) => {
@@ -87,7 +75,15 @@ exports.addUser = addUser;
  * @return {Promise<[{}]>} A promise to the reservations.
  */
 const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
+  //return getAllProperties(null, 2);
+  return pool
+  .query(`SELECT * FROM reservations WHERE guest_id = $1 LIMIT $2;`, [guest_id, limit])
+  .then((result) => {
+    return result.rows;
+  })
+  .catch((err) => {
+    console.log(err.message);
+});
 }
 exports.getAllReservations = getAllReservations;
 
@@ -108,13 +104,6 @@ const getAllProperties = function(options, limit = 10) {
     .catch((err) => {
       console.log(err.message);
   });
-  // const limitedProperties = {};
-  // for (let i = 1; i <= limit; i++) {
-  //   limitedProperties[i] = properties[i];
-  // }
-  // console.log(limitedProperties[1]);
-  // console.log(limitedProperties[2]);
-  // return Promise.resolve(limitedProperties);
 }
 exports.getAllProperties = getAllProperties;
 
