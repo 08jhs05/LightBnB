@@ -156,9 +156,36 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  // const propertyId = Object.keys(properties).length + 1;
+  // property.id = propertyId;
+  // properties[propertyId] = property;
+  // return Promise.resolve(property);
+
+  const prop_owner_id = property.owner_id;
+  const prop_title = property.title;
+  const prop_description = property.description;
+  const prop_thumbnail_photo_url = property.thumbnail_photo_url;
+  const prop_cover_photo_url = property.cover_photo_url;
+  const prop_cost_per_night = property.cost_per_night;
+  const prop_street = property.street;
+  const prop_city = property.city;
+  const prop_province = property.province;
+  const prop_post_code = property.post_code;
+  const prop_country = property.country;
+  const prop_parking_spaces = property.parking_spaces;
+  const prop_number_of_bathrooms = property.number_of_bathrooms;
+  const prop_number_of_bedrooms = property.number_of_bedrooms;
+
+  return pool
+  .query(`INSERT INTO properties (title, description, owner_id, cover_photo_url, thumbnail_photo_url, cost_per_night, parking_spaces, number_of_bathrooms, number_of_bedrooms, province, city, country, street, post_code)
+  VALUES ($1, $2, $3 ,$4 ,$5 ,$6 ,$7 ,$8 ,$9 ,$10 ,$11 ,$12 ,$13 ,$14) RETURNING *;`, [prop_title, prop_description, prop_owner_id, prop_cover_photo_url, prop_thumbnail_photo_url, prop_cost_per_night, prop_parking_spaces, prop_number_of_bathrooms, prop_number_of_bedrooms, prop_province, prop_city, prop_country, prop_street, prop_post_code])
+  .then((result) => {
+    console.log(result.rows[0])
+    return result.rows[0];
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
+
 }
 exports.addProperty = addProperty;
